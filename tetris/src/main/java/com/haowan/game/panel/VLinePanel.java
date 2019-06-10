@@ -2,6 +2,9 @@ package com.haowan.game.panel;
 
 import static com.haowan.game.Constant.CELL_SIZE;
 import static com.haowan.game.Constant.LEFT_PANEL_WIDTH;
+import static com.haowan.game.Constant.P_GAP;
+
+import java.awt.Color;
 
 /**
  * 名称: HLinePanel.java <br>
@@ -18,15 +21,15 @@ public class VLinePanel extends DropDownPanel {
     private int height = 4 * CELL_SIZE;
 
     public VLinePanel() {
-        init(0);
+        init(P_GAP);
     }
 
     public void init(int y) {
+        setBackground(Color.GRAY);
         setBounds(getCenterAlignX(), y, width, height);
     }
 
     private int getCenterAlignX() {
-        return Math.round(((float) LEFT_PANEL_WIDTH - width) / 2 / CELL_SIZE) * CELL_SIZE;
+        return Math.round(((float) LEFT_PANEL_WIDTH - width) / 2 / CELL_SIZE) * CELL_SIZE - P_GAP;
     }
-
 }

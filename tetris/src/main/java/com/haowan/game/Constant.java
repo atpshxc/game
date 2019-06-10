@@ -14,10 +14,13 @@ public class Constant {
     public static final String BUTTON_START = "Start";
     public static final String BUTTON_PAUSE = "Pause";
 
-    public static final int CELL_SIZE = 20;
     public static final int WIN_WIDTH = 410;
     public static final int WIN_HEIGHT = 510;
-    public static final int LEFT_PANEL_WIDTH = 260;
+    public static final int P_GAP = 10;
+    public static final int CELL_SIZE = 20;
+    public static final int H_CELLS = 13;
+    public static final int V_CELLS = 26;
+    public static final int LEFT_PANEL_WIDTH = CELL_SIZE * H_CELLS;
     public static final int RIGHT_PANEL_WIDTH = WIN_WIDTH - LEFT_PANEL_WIDTH;
 
 }

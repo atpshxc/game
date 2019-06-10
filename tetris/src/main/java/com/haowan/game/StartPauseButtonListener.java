@@ -1,15 +1,19 @@
 package com.haowan.game;
 
+import static com.haowan.game.Constant.BUTTON_PAUSE;
+import static com.haowan.game.Constant.BUTTON_START;
+import static com.haowan.game.Constant.CELL_SIZE;
+import static com.haowan.game.Constant.P_GAP;
+import static com.haowan.game.Constant.V_CELLS;
+
 import com.haowan.game.panel.HLinePanel;
 import com.haowan.game.panel.MainPanel;
-
-import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-
-import static com.haowan.game.Constant.*;
+import javax.swing.JButton;
+import javax.swing.JOptionPane;
 
 /**
  * 名称: StartPauseButtonListener.java <br>
@@ -34,48 +38,55 @@ public class StartPauseButtonListener implements ActionListener {
 
     @Override
     public void actionPerformed(final ActionEvent e) {
-        executorService.execute(new Runnable() {
-            @Override
-            public void run() {
-                JButton button = (JButton) e.getSource();
-                String text = button.getText();
-                if (text.equals(BUTTON_START)) {
-                    button.setText(BUTTON_PAUSE);
-                    pause = false;
-                    if (running) return;
-                } else {
+        executorService.execute(() -> {
+            JButton button = (JButton) e.getSource();
+            String text = button.getText();
+            if (text.equals(BUTTON_START)) {
+                button.setText(BUTTON_PAUSE);
+                pause = false;
+                if (running) return;
+            } else {
+                button.setText(BUTTON_START);
+                pause = true;
+                return;
+            }
+            running = true;
+            HLinePanel linePanel = new HLinePanel();
+            int maxHeight = 0;
+            while (true) {
+                if (maxHeight >= V_CELLS) {
+                    JOptionPane
+                        .showMessageDialog(null, "Game Over!", "", JOptionPane.INFORMATION_MESSAGE,
+                            null);
+                    running = false;
                     button.setText(BUTTON_START);
-                    pause = true;
-                    return;
+                    pause = false;
+                    mainPanel.reset();
+                    mainPanel.removeAll();
+                    break;
                 }
-                running = true;
-                int y = 0;
-                HLinePanel linePanel = new HLinePanel();
-                while (true) {
-                    mainPanel.add(linePanel);
-                    mainPanel.repaint();
-                    while (pause) {
-                        try {
-                            Thread.sleep(1000);
-                        } catch (InterruptedException e1) {
-                        }
-                    }
+                mainPanel.add(linePanel);
+                mainPanel.repaint();
+                while (pause) {
                     try {
-                        Thread.sleep(50);
+                        Thread.sleep(1000);
                     } catch (InterruptedException e1) {
                     }
-                    y += CELL_SIZE;
-                    for (int i=0; i<LEFT_PANEL_WIDTH/CELL_SIZE; i++) {
-                        if (y + mainPanel.getFilledValue(i) >= WIN_HEIGHT - 2 * CELL_SIZE) {
-                            mainPanel.setFilled(i, mainPanel.getFilledValue(i) + linePanel.getHeight());
-                            y = 0;
-                            linePanel = new HLinePanel();
-                            continue;
-                        }
-                    }
-                    linePanel.init(y);
-                    mainPanel.repaint();
                 }
+                try {
+                    Thread.sleep(50);
+                } catch (InterruptedException e1) {
+                }
+                for (int i=linePanel.getX(); i<linePanel.getWidth() + linePanel.getX(); i += CELL_SIZE) {
+                    if (mainPanel.getFilledValue((i-P_GAP)/CELL_SIZE-1, (linePanel.getY()+linePanel.getHeight()-P_GAP)/CELL_SIZE) == 1) {
+                        maxHeight += linePanel.getHeight()/CELL_SIZE;
+                        mainPanel.setFilled(linePanel);
+                        linePanel = new HLinePanel();
+                        break;
+                    }
+                }
+                linePanel.init(linePanel.getY() + CELL_SIZE);
+//                mainPanel.repaint();
             }
         });
 

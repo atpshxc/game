@@ -29,7 +29,7 @@ public class GameFrame extends JFrame {
         this.setLayout(null);
 
         MainPanel mainPanel = new MainPanel();
-        mainPanel.setBorder(BorderFactory.createEtchedBorder());
+        mainPanel.setBorder(BorderFactory.createMatteBorder(3, 3, 35, 0, Color.WHITE));
 
         JPanel rightPanel = new JPanel();
         rightPanel.setLocation(LEFT_PANEL_WIDTH, 0);
