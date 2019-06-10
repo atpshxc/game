@@ -1,18 +1,11 @@
 package com.haowan.game;
 
-import static com.haowan.game.Constant.BUTTON_START;
+import com.haowan.game.panel.MainPanel;
 
-import java.awt.BorderLayout;
-import java.awt.Color;
-import java.awt.Container;
-import java.awt.FlowLayout;
-import java.awt.Graphics;
-import javax.swing.BorderFactory;
-import javax.swing.JButton;
-import javax.swing.JFrame;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
-import javax.swing.WindowConstants;
+import static com.haowan.game.Constant.*;
+
+import java.awt.*;
+import javax.swing.*;
 
 /**
  * 名称: GameFrame.java <br>
@@ -25,9 +18,6 @@ import javax.swing.WindowConstants;
  * @since 2019/6/9 17:11.
  */
 public class GameFrame extends JFrame {
-    public static final int WIN_WIDTH = 410;
-    public static final int WIN_HEIGHT = 510;
-    public static final int LEFT_PANEL_WIDTH = 260;
 
     public GameFrame() {
         this.setVisible(true);
@@ -38,38 +28,38 @@ public class GameFrame extends JFrame {
         this.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         this.setLayout(null);
 
-        GamePanel mainPanel = new GamePanel();
+        MainPanel mainPanel = new MainPanel();
         mainPanel.setBorder(BorderFactory.createEtchedBorder());
 
         JPanel rightPanel = new JPanel();
         rightPanel.setLocation(LEFT_PANEL_WIDTH, 0);
-        rightPanel.setSize(WIN_WIDTH-LEFT_PANEL_WIDTH, WIN_HEIGHT);
+        rightPanel.setSize(RIGHT_PANEL_WIDTH, WIN_HEIGHT);
         rightPanel.setLayout(null);
         rightPanel.setBorder(BorderFactory.createEtchedBorder());
 
         JPanel previewPanel = new JPanel();
         previewPanel.setLayout(null);
-        previewPanel.setBounds(0,0,WIN_WIDTH-LEFT_PANEL_WIDTH,100);
+        previewPanel.setBounds(0, 0, RIGHT_PANEL_WIDTH, 100);
         previewPanel.setBorder(BorderFactory.createEtchedBorder());
 
         JPanel scorePanel = new JPanel();
         scorePanel.setBorder(BorderFactory.createEtchedBorder());
         scorePanel.setLayout(null);
-        scorePanel.setBounds(0, 100, WIN_WIDTH-LEFT_PANEL_WIDTH, 200);
+        scorePanel.setBounds(0, 100, RIGHT_PANEL_WIDTH, 200);
         JLabel scoreLabel = new JLabel("Score: ");
-        scoreLabel.setBounds(0,50,40,40);
-        JLabel score= new JLabel("0");
-        score.setBounds(40,50,100,40);
+        scoreLabel.setBounds(0, 50, 40, 40);
+        JLabel score = new JLabel("0");
+        score.setBounds(40, 50, 100, 40);
         scorePanel.add(scoreLabel);
         scorePanel.add(score);
 
         JPanel menuPanel = new JPanel();
         menuPanel.setBorder(BorderFactory.createEtchedBorder());
         menuPanel.setLayout(null);
-        menuPanel.setBounds(0, 200, WIN_WIDTH-LEFT_PANEL_WIDTH, 300);
+        menuPanel.setBounds(0, 200, RIGHT_PANEL_WIDTH, 300);
         JButton start = new JButton(BUTTON_START);
         start.setBounds(30, 160, 80, 40);
-        start.addActionListener(new StartAction(mainPanel));
+        start.addActionListener(new StartPauseButtonListener(mainPanel));
         menuPanel.add(start);
 
         rightPanel.add(previewPanel);
@@ -78,6 +68,12 @@ public class GameFrame extends JFrame {
 
         Container container = this.getContentPane();
         container.setLayout(null);
+//        JMenu classic = new JMenu("经典");
+//        classic.setBounds(0,0,100,50);
+//        JMenu numeric = new JMenu("数字");
+//        numeric.setBounds(120,0, 100, 50);
+//        container.add(classic);
+//        container.add(numeric);
         container.add(mainPanel);
         container.add(rightPanel);
     }

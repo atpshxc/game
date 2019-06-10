@@ -1,19 +1,18 @@
 package com.haowan.game;
 
-import static com.haowan.game.Constant.BUTTON_PAUSE;
-import static com.haowan.game.Constant.BUTTON_START;
-import static com.haowan.game.GameFrame.LEFT_PANEL_WIDTH;
-import static com.haowan.game.GameFrame.WIN_HEIGHT;
+import com.haowan.game.panel.HLinePanel;
+import com.haowan.game.panel.MainPanel;
 
+import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-import javax.swing.JButton;
-import javax.swing.JPanel;
+
+import static com.haowan.game.Constant.*;
 
 /**
- * 名称: StartAction.java <br>
+ * 名称: StartPauseButtonListener.java <br>
  * 描述: <br>
  * 类型: JAVA <br>
  * 最近修改时间:2019/6/9 22:07.<br>
@@ -22,10 +21,10 @@ import javax.swing.JPanel;
  * @version [版本号, V1.0]
  * @since 2019/6/9 22:07.
  */
-public class StartAction implements ActionListener {
-    private GamePanel mainPanel;
+public class StartPauseButtonListener implements ActionListener {
+    private MainPanel mainPanel;
 
-    public StartAction(GamePanel mainPanel) {
+    public StartPauseButtonListener(MainPanel mainPanel) {
         this.mainPanel = mainPanel;
     }
 
@@ -51,7 +50,7 @@ public class StartAction implements ActionListener {
                 }
                 running = true;
                 int y = 0;
-                LinePanel linePanel = new LinePanel();
+                HLinePanel linePanel = new HLinePanel();
                 while (true) {
                     mainPanel.add(linePanel);
                     mainPanel.repaint();
@@ -65,17 +64,16 @@ public class StartAction implements ActionListener {
                         Thread.sleep(50);
                     } catch (InterruptedException e1) {
                     }
-                    y += 20;
-                    for (int i=0; i<LEFT_PANEL_WIDTH/20; i++) {
-                        if (y + mainPanel.getFilledValue(i) >= WIN_HEIGHT - 2 * 20) {
+                    y += CELL_SIZE;
+                    for (int i=0; i<LEFT_PANEL_WIDTH/CELL_SIZE; i++) {
+                        if (y + mainPanel.getFilledValue(i) >= WIN_HEIGHT - 2 * CELL_SIZE) {
                             mainPanel.setFilled(i, mainPanel.getFilledValue(i) + linePanel.getHeight());
                             y = 0;
-                            linePanel = new LinePanel();
+                            linePanel = new HLinePanel();
                             continue;
                         }
                     }
-                    linePanel.setY(y);
-                    linePanel.init();
+                    linePanel.init(y);
                     mainPanel.repaint();
                 }
             }
