@@ -51,7 +51,7 @@ public class StartPauseButtonListener implements ActionListener {
                 return;
             }
             running = true;
-            HLinePanel linePanel = new HLinePanel();
+            HLinePanel linePanel = new HLinePanel(mainPanel);
             int maxHeight = 0;
             while (true) {
                 if (maxHeight >= V_CELLS) {
@@ -66,7 +66,7 @@ public class StartPauseButtonListener implements ActionListener {
                     break;
                 }
                 mainPanel.add(linePanel);
-                mainPanel.repaint();
+                linePanel.requestFocus();
                 while (pause) {
                     try {
                         Thread.sleep(1000);
@@ -74,19 +74,18 @@ public class StartPauseButtonListener implements ActionListener {
                     }
                 }
                 try {
-                    Thread.sleep(50);
+                    Thread.sleep(500);
                 } catch (InterruptedException e1) {
                 }
                 for (int i=linePanel.getX(); i<linePanel.getWidth() + linePanel.getX(); i += CELL_SIZE) {
-                    if (mainPanel.getFilledValue((i-P_GAP)/CELL_SIZE-1, (linePanel.getY()+linePanel.getHeight()-P_GAP)/CELL_SIZE) == 1) {
+                    if (mainPanel.getFilledValue((i-P_GAP)/CELL_SIZE, (linePanel.getY()+linePanel.getHeight()-P_GAP)/CELL_SIZE) == 1) {
                         maxHeight += linePanel.getHeight()/CELL_SIZE;
                         mainPanel.setFilled(linePanel);
-                        linePanel = new HLinePanel();
+                        linePanel = new HLinePanel(mainPanel);
                         break;
                     }
                 }
-                linePanel.init(linePanel.getY() + CELL_SIZE);
-//                mainPanel.repaint();
+                linePanel.init(linePanel.getX(), linePanel.getY() + CELL_SIZE);
             }
         });
 
