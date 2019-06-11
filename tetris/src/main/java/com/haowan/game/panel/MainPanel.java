@@ -18,6 +18,15 @@ import javax.swing.JPanel;
  */
 public class MainPanel extends JPanel {
     private int[][] filled = new int[H_CELLS][V_CELLS - 2];
+    private volatile boolean pause;
+
+    public boolean isPause() {
+        return pause;
+    }
+
+    public void setPause(boolean pause) {
+        this.pause = pause;
+    }
 
     public void setFilled(DropDownPanel panel) {
         int x = panel.getX();

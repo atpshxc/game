@@ -32,7 +32,6 @@ public class StartPauseButtonListener implements ActionListener {
         this.mainPanel = mainPanel;
     }
 
-    private volatile boolean pause;
     private volatile boolean running;
     private ExecutorService executorService = Executors.newFixedThreadPool(2);
 
@@ -43,33 +42,36 @@ public class StartPauseButtonListener implements ActionListener {
             String text = button.getText();
             if (text.equals(BUTTON_START)) {
                 button.setText(BUTTON_PAUSE);
-                pause = false;
-                if (running) return;
+                mainPanel.setPause(false);
+                if (running) {
+                    return;
+                }
             } else {
                 button.setText(BUTTON_START);
-                pause = true;
+                mainPanel.setPause(true);
                 return;
             }
+            mainPanel.repaint();
             running = true;
             HLinePanel linePanel = new HLinePanel(mainPanel);
             int maxHeight = 0;
             while (true) {
-                if (maxHeight >= V_CELLS) {
+                if (maxHeight >= V_CELLS-3) {
                     JOptionPane
                         .showMessageDialog(null, "Game Over!", "", JOptionPane.INFORMATION_MESSAGE,
                             null);
                     running = false;
                     button.setText(BUTTON_START);
-                    pause = false;
+                    mainPanel.setPause(false);
                     mainPanel.reset();
                     mainPanel.removeAll();
                     break;
                 }
                 mainPanel.add(linePanel);
                 linePanel.requestFocus();
-                while (pause) {
+                while (mainPanel.isPause()) {
                     try {
-                        Thread.sleep(1000);
+                        Thread.sleep(500);
                     } catch (InterruptedException e1) {
                     }
                 }
@@ -77,15 +79,21 @@ public class StartPauseButtonListener implements ActionListener {
                     Thread.sleep(500);
                 } catch (InterruptedException e1) {
                 }
+                boolean isNew = false;
                 for (int i=linePanel.getX(); i<linePanel.getWidth() + linePanel.getX(); i += CELL_SIZE) {
                     if (mainPanel.getFilledValue((i-P_GAP)/CELL_SIZE, (linePanel.getY()+linePanel.getHeight()-P_GAP)/CELL_SIZE) == 1) {
                         maxHeight += linePanel.getHeight()/CELL_SIZE;
                         mainPanel.setFilled(linePanel);
+
                         linePanel = new HLinePanel(mainPanel);
+                        isNew = true;
+                        mainPanel.repaint();
                         break;
                     }
                 }
-                linePanel.init(linePanel.getX(), linePanel.getY() + CELL_SIZE);
+                if (!isNew) {
+                    linePanel.setBounds(linePanel.getX(), linePanel.getY() + CELL_SIZE, linePanel.getWidth(), linePanel.getHeight());
+                }
             }
         });
 

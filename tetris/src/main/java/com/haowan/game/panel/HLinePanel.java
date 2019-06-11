@@ -28,7 +28,7 @@ public class HLinePanel extends DropDownPanel {
         addKeyListener(new KeyBoardListener(this, panel));
     }
 
-    public void init(int x, int y) {
+    private void init(int x, int y) {
         setBackground(Color.GRAY);
         setBounds(x, y, width, height);
         initCells(4, 1);

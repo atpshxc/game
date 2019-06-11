@@ -25,6 +25,9 @@ public class KeyBoardListener implements KeyListener {
 
     @Override
     public void keyPressed(KeyEvent e) {
+        if (mainPanel.isPause()) {
+            return;
+        }
         if (e.getKeyCode() == 40) {//down
             for (int i=dropDownPanel.getX(); i<dropDownPanel.getWidth() + dropDownPanel.getX(); i += CELL_SIZE) {
                 if (mainPanel.getFilledValue((i-P_GAP)/CELL_SIZE, (dropDownPanel.getY()+dropDownPanel.getHeight()-P_GAP)/CELL_SIZE) == 1) {
