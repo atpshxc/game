@@ -10,6 +10,8 @@ public class BoxFactory {
         switch (i) {
             case 0:
                 return new HBox();
+            case 1:
+                return new VBox();
         }
         return new HBox();
     }

@@ -1,14 +1,20 @@
 package com.haowan.game;
 
-import com.haowan.game.panel.MainPanel;
+import static com.haowan.game.Constant.BUTTON_START;
+import static com.haowan.game.Constant.CELL_SIZE;
+import static com.haowan.game.Constant.LEFT_PANEL_WIDTH;
+import static com.haowan.game.Constant.RIGHT_PANEL_WIDTH;
+import static com.haowan.game.Constant.WIN_HEIGHT;
+import static com.haowan.game.Constant.WIN_WIDTH;
 
-import static com.haowan.game.Constant.*;
-
-import java.awt.*;
-import java.io.File;
-import java.io.IOException;
-import javax.imageio.ImageIO;
-import javax.swing.*;
+import java.awt.Color;
+import java.awt.Container;
+import javax.swing.BorderFactory;
+import javax.swing.JButton;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.WindowConstants;
 
 /**
  * 名称: GameFrame.java <br>

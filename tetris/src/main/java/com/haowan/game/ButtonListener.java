@@ -1,15 +1,14 @@
 package com.haowan.game;
 
-import com.haowan.game.panel.HLinePanel;
-import com.haowan.game.panel.MainPanel;
+import static com.haowan.game.Constant.BUTTON_PAUSE;
+import static com.haowan.game.Constant.BUTTON_START;
 
-import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-
-import static com.haowan.game.Constant.*;
+import javax.swing.JButton;
+import javax.swing.JPanel;
 
 /**
  * 名称: StartPauseButtonListener.java <br>
@@ -23,7 +22,6 @@ import static com.haowan.game.Constant.*;
  */
 public class ButtonListener implements ActionListener {
     private TablePanel mainPanel;
-    private JPanel scorePanel;
 
     public ButtonListener(TablePanel mainPanel) {
         this.mainPanel = mainPanel;
@@ -48,9 +46,10 @@ public class ButtonListener implements ActionListener {
                 mainPanel.setPause(true);
                 return;
             }
-//            mainPanel.repaint();
             running = true;
             mainPanel.start();
+            button.setText(BUTTON_START);
+            running = false;
         });
 
     }
