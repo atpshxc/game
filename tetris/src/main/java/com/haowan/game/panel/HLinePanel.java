@@ -25,7 +25,7 @@ public class HLinePanel extends DropDownPanel {
 
     public HLinePanel(MainPanel panel) {
         init(getCenterAlignX(), P_GAP);
-        addKeyListener(new KeyBoardListener(this, panel));
+//        addKeyListener(new KeyBoardListener(this, panel));
     }
 
     private void init(int x, int y) {

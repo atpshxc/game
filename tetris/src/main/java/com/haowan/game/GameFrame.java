@@ -5,6 +5,9 @@ import com.haowan.game.panel.MainPanel;
 import static com.haowan.game.Constant.*;
 
 import java.awt.*;
+import java.io.File;
+import java.io.IOException;
+import javax.imageio.ImageIO;
 import javax.swing.*;
 
 /**
@@ -27,9 +30,6 @@ public class GameFrame extends JFrame {
         this.setResizable(false);
         this.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         this.setLayout(null);
-
-        MainPanel mainPanel = new MainPanel();
-        mainPanel.setBorder(BorderFactory.createMatteBorder(3, 3, 35, 0, Color.WHITE));
 
         JPanel rightPanel = new JPanel();
         rightPanel.setLocation(LEFT_PANEL_WIDTH, 0);
@@ -57,9 +57,13 @@ public class GameFrame extends JFrame {
         menuPanel.setBorder(BorderFactory.createEtchedBorder());
         menuPanel.setLayout(null);
         menuPanel.setBounds(0, 200, RIGHT_PANEL_WIDTH, 300);
+
+        TablePanel mainPanel = new TablePanel(previewPanel, score);
+        mainPanel.setBorder(BorderFactory.createMatteBorder(3, 3, 35, 0, Color.WHITE));
+
         JButton start = new JButton(BUTTON_START);
         start.setBounds(30, 160, 80, 40);
-        start.addActionListener(new StartPauseButtonListener(mainPanel));
+        start.addActionListener(new ButtonListener(mainPanel));
         menuPanel.add(start);
 
         rightPanel.add(previewPanel);

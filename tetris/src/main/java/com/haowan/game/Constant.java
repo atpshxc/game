@@ -20,6 +20,8 @@ public class Constant {
     public static final int CELL_SIZE = 20;
     public static final int H_CELLS = 13;
     public static final int V_CELLS = 26;
+    public static final int ROWS = 23;
+    public static final int COLS = 12;
     public static final int LEFT_PANEL_WIDTH = CELL_SIZE * H_CELLS;
     public static final int RIGHT_PANEL_WIDTH = WIN_WIDTH - LEFT_PANEL_WIDTH;
 
