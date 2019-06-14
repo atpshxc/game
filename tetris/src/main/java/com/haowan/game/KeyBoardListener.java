@@ -26,6 +26,8 @@ public class KeyBoardListener implements KeyListener {
             mainPanel.processLeft();
         } else if (e.getKeyCode() == 39) {//right
             mainPanel.processRight();
+        } else if ( e.getKeyCode() == 32) {//空格
+            mainPanel.rotate();
         }
     }
 

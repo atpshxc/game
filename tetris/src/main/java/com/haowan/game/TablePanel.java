@@ -13,8 +13,8 @@ public class TablePanel extends JPanel {
 
     private static final int P_GAP = 10;
     private Cell[][] table = new Cell[ROWS][COLS];
-    private Box currentBox = BoxFactory.next();
-    private Box nextBox = BoxFactory.next();
+    private volatile Box currentBox = BoxFactory.next();
+    private volatile Box nextBox = BoxFactory.next();
     private boolean pause;
 
     public TablePanel(JPanel previewPanel, JLabel scoreLabel) {
@@ -40,8 +40,7 @@ public class TablePanel extends JPanel {
         draw(currentBox.getCells());
         drawPreview(nextBox.getCells());
         while (true) {
-            Box box = currentBox;
-            if (checkOver(box.getCells())) {
+            if (checkOver(currentBox.getCells())) {
                 JOptionPane.showMessageDialog(null, "Game Over!", ""
                         , JOptionPane.INFORMATION_MESSAGE, null);
                 reset();
@@ -58,10 +57,10 @@ public class TablePanel extends JPanel {
                 Thread.sleep(300);
             } catch (InterruptedException e1) {
             }
-            if (canDrop(box.getCells())) {
-                draw(box.drop());
+            if (canDrop(currentBox.getCells())) {
+                draw(currentBox.drop());
             } else {
-                addCells(box.getCells());
+                addCells(currentBox.getCells());
                 currentBox = nextBox;
                 nextBox = BoxFactory.next();
                 drawPreview(nextBox.getCells());
@@ -72,11 +71,7 @@ public class TablePanel extends JPanel {
 
     private void reset() {
         for (Cell[] cells : table) {
-            for (Cell cell : cells) {
-                if (cell != null) {
-                    cell.setRow(-100);
-                }
-            }
+            cleanCells(cells);
         }
 
         cleanPreview();
@@ -85,6 +80,14 @@ public class TablePanel extends JPanel {
         pause = false;
         currentBox = BoxFactory.next();
         nextBox = BoxFactory.next();
+    }
+
+    private void cleanCells(Cell[] cells) {
+        for (Cell cell : cells) {
+            if (cell != null) {
+                cell.setRow(-100);
+            }
+        }
     }
 
     private void draw(Cell[] cells) {
@@ -244,5 +247,17 @@ public class TablePanel extends JPanel {
         if (canRight(currentBox.getCells())) {
             currentBox.right();
         }
+    }
+
+    public void rotate() {
+        if (currentBox != null) {
+            Box rotate = currentBox.rotate(table);
+            if (rotate != null) {
+                Box old = currentBox;
+                currentBox = rotate;
+                cleanCells(old.getCells());
+            }
+        }
+        repaint();
     }
 }
