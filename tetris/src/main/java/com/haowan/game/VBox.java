@@ -7,11 +7,11 @@ public class VBox extends Box {
     private Box[] box = {};
 
     public VBox() {
-        cells = new Cell[][]{
-                new Cell[]{new Cell(0, 4), null, null, null},
-                new Cell[]{new Cell(1, 4), null, null, null},
-                new Cell[]{new Cell(2, 4), null, null, null},
-                new Cell[]{new Cell(3, 4), null, null, null},
+        cells = new Cell[]{
+                new Cell(0, 4),
+                new Cell(1, 4),
+                new Cell(2, 4),
+                new Cell(3, 4)
         };
     }
 

@@ -1,19 +1,9 @@
 package com.haowan.game;
 
-import static com.haowan.game.Constant.CELL_SIZE;
-import static com.haowan.game.Constant.COLS;
-import static com.haowan.game.Constant.H_CELLS;
-import static com.haowan.game.Constant.LEFT_PANEL_WIDTH;
-import static com.haowan.game.Constant.ROWS;
-import static com.haowan.game.Constant.V_CELLS;
-import static com.haowan.game.Constant.WIN_HEIGHT;
+import javax.swing.*;
+import java.awt.*;
 
-import java.awt.Color;
-import java.awt.Component;
-import java.awt.Graphics;
-import javax.swing.JLabel;
-import javax.swing.JOptionPane;
-import javax.swing.JPanel;
+import static com.haowan.game.Constant.*;
 
 public class TablePanel extends JPanel {
 
@@ -53,19 +43,19 @@ public class TablePanel extends JPanel {
             Box box = currentBox;
             if (checkOver(box.getCells())) {
                 JOptionPane.showMessageDialog(null, "Game Over!", ""
-                    , JOptionPane.INFORMATION_MESSAGE, null);
+                        , JOptionPane.INFORMATION_MESSAGE, null);
                 reset();
                 return;
             }
 
             while (pause) {
                 try {
-                    Thread.sleep(500);
+                    Thread.sleep(100);
                 } catch (InterruptedException e) {
                 }
             }
             try {
-                Thread.sleep(500);
+                Thread.sleep(300);
             } catch (InterruptedException e1) {
             }
             if (canDrop(box.getCells())) {
@@ -88,30 +78,38 @@ public class TablePanel extends JPanel {
                 }
             }
         }
+
+        cleanPreview();
+
         table = new Cell[ROWS][COLS];
         pause = false;
         currentBox = BoxFactory.next();
         nextBox = BoxFactory.next();
     }
 
-    private void drawPreview(Cell[][] cells) {
-        Component[] components = previewPanel.getComponents();
-        for (Component c : components
-        ) {
-            ((Cell)c).setRow(-100);
-            ((Cell) c).updateUI();
+    private void draw(Cell[] cells) {
+        for (Cell cell : cells) {
+            add(cell);
+            cell.updateUI();
         }
-        for (int i = 0; i < cells.length; i++) {
-            for (int j = 0; j < cells[0].length; j++) {
-                Cell cell = cells[i][j];
-                if (cell != null) {
-                    Cell preCell = new Cell(cell.getRow(), cell.getCol());
-                    preCell.setCol(cell.getCol() - 3);
-                    preCell.setRow(cell.getRow() + 1);
-                    previewPanel.add(preCell);
-                    preCell.updateUI();
-                }
-            }
+    }
+
+    private void drawPreview(Cell[] cells) {
+        cleanPreview();
+        for (Cell cell : cells) {
+            Cell preCell = new Cell(cell.getRow(), cell.getCol());
+            preCell.setCol(cell.getCol() - 3);
+            preCell.setRow(cell.getRow() + 1);
+            previewPanel.add(preCell);
+            preCell.updateUI();
+        }
+    }
+
+    private void cleanPreview() {
+        Component[] components = previewPanel.getComponents();
+        for (Component c : components) {
+            ((Cell) c).setRow(-100);
+            ((Cell) c).updateUI();
         }
     }
 
@@ -124,13 +122,10 @@ public class TablePanel extends JPanel {
         }
     }
 
-    public boolean checkOver(Cell[][] cells) {
-        for (int i = 0; i < cells.length; i++) {
-            for (int j = 0; j < cells[0].length; j++) {
-                Cell cell = cells[i][j];
-                if (cell != null && table[cell.getRow()][cell.getCol()] != null) {
-                    return true;
-                }
+    public boolean checkOver(Cell[] cells) {
+        for (Cell cell : cells) {
+            if (table[cell.getRow()][cell.getCol()] != null) {
+                return true;
             }
         }
         return false;
@@ -175,6 +170,15 @@ public class TablePanel extends JPanel {
         }
     }
 
+    private int calScore(int count) {
+        int s = 100;
+        for (int i = 1; i < count; i++) {
+            s *= 2;
+        }
+        score += s;
+        return score;
+    }
+
     private void adjustTable(int num, int count) {
         for (int i = num - 1; i >= 0; i--) {
             for (int j = 0; j < table[0].length; j++) {
@@ -188,49 +192,40 @@ public class TablePanel extends JPanel {
         }
     }
 
-    private int calScore(int count) {
-        int s = 100;
-        for (int i = 1; i < count; i++) {
-            s *= 2;
-        }
-        score += s;
-        return score;
-    }
-
-    private void addCells(Cell[][] cells) {
-        for (int i = 0; i < cells.length; i++) {
-            for (int j = 0; j < cells[0].length; j++) {
-                Cell cell = cells[i][j];
-                if (cell != null) {
-                    table[cell.getRow()][cell.getCol()] = cell;
-                }
-            }
+    private void addCells(Cell[] cells) {
+        for (Cell cell : cells) {
+            table[cell.getRow()][cell.getCol()] = cell;
         }
     }
 
-    private boolean canDrop(Cell[][] cells) {
-        for (int i = 0; i < cells.length; i++) {
-            for (int j = 0; j < cells[0].length; j++) {
-                Cell cell = cells[i][j];
-                if (cell != null && (cell.getRow() >= ROWS - 1
+    private boolean canDrop(Cell[] cells) {
+        for (Cell cell : cells) {
+            if ((cell.getRow() >= ROWS - 1
                     || table[cell.getRow() + 1][cell.getCol()] != null)) {
-                    return false;
-                }
+                return false;
             }
         }
         return true;
     }
 
-    private void draw(Cell[][] cells) {
-        for (int i = 0; i < cells.length; i++) {
-            for (int j = 0; j < cells[0].length; j++) {
-                Cell cell = cells[i][j];
-                if (cell != null) {
-                    add(cell);
-                    cell.updateUI();
-                }
+    private boolean canLeft(Cell[] cells) {
+        for (Cell cell : cells) {
+            if ((cell.getCol() - 1 < 0
+                    || table[cell.getRow()][cell.getCol() - 1] != null)) {
+                return false;
             }
         }
+        return true;
+    }
+
+    private boolean canRight(Cell[] cells) {
+        for (Cell cell : cells) {
+            if ((cell.getCol() >= COLS - 1
+                    || table[cell.getRow()][cell.getCol() + 1] != null)) {
+                return false;
+            }
+        }
+        return true;
     }
 
     public void processDown() {
@@ -245,35 +240,9 @@ public class TablePanel extends JPanel {
         }
     }
 
-    private boolean canLeft(Cell[][] cells) {
-        for (int i = 0; i < cells.length; i++) {
-            for (int j = 0; j < cells[0].length; j++) {
-                Cell cell = cells[i][j];
-                if (cell != null && (cell.getCol() - 1 < 0
-                    || table[cell.getRow()][cell.getCol() - 1] != null)) {
-                    return false;
-                }
-            }
-        }
-        return true;
-    }
-
     public void processRight() {
         if (canRight(currentBox.getCells())) {
             currentBox.right();
         }
-    }
-
-    private boolean canRight(Cell[][] cells) {
-        for (int i = 0; i < cells.length; i++) {
-            for (int j = 0; j < cells[0].length; j++) {
-                Cell cell = cells[i][j];
-                if (cell != null && (cell.getCol() >= COLS - 1
-                    || table[cell.getRow()][cell.getCol() + 1] != null)) {
-                    return false;
-                }
-            }
-        }
-        return true;
     }
 }

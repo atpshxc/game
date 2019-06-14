@@ -86,6 +86,7 @@ public class GameFrame extends JFrame {
 //        container.add(numeric);
         container.add(mainPanel);
         container.add(rightPanel);
+        container.repaint();
     }
 
     public static void main(String[] args) {
