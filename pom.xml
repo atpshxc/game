@@ -11,6 +11,7 @@
 
     <modules>
         <module>tetris</module>
+        <module>sudoku</module>
     </modules>
 
     <properties>
